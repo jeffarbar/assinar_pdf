@@ -1,8 +1,10 @@
 package br.com.telefone.pdf.config;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -18,14 +20,19 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SwaggerConfig extends WebMvcConfigurationSupport {
 
+	@Value("${swagger.host}") 
+	private String host;
+	
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("br.com.telefone.pdf.controller"))
                 .build()
+                .host(host)
                 .apiInfo(metaData());
 
     }
@@ -46,5 +53,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
+        		
     }
+    
 }
